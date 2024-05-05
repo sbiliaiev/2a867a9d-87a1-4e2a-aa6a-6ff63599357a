@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext, memo } from 'react';
 
 import Image from 'next/image';
 
@@ -6,7 +6,7 @@ import { Popover, Tab } from '@headlessui/react';
 
 import { CountryContext } from '@/context';
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
@@ -16,23 +16,22 @@ export interface TabsProps {
   };
 }
 
-export default function Tabs({ data }: TabsProps) {
+const Tabs = memo(function Tabs({ data }: TabsProps) {
   const { setCountry } = useContext(CountryContext);
 
   return (
     <div className="w-full px-2 sm:px-0">
       <Tab.Group>
-        <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+        <Tab.List className="flex p-1">
           {Object.keys(data).map((region) => (
             <Tab
               key={region}
               className={({ selected }) =>
                 classNames(
-                  'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                  'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  'w-full py-2.5 text-sm leading-5 focus:outline-none font-black uppercase hover:bg-zinc-200',
                   selected
-                    ? 'bg-white text-blue-700 shadow'
-                    : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                    ? 'bg-white text-black border-b-2 border-zinc-400'
+                    : 'text-gray-500 border-b-2 border-zinc-200',
                 )
               }
             >
@@ -53,7 +52,7 @@ export default function Tabs({ data }: TabsProps) {
                 {countries.map((country) => (
                   <Popover.Button
                     key={country.id}
-                    className="relative rounded-md p-3 hover:bg-gray-100 flex"
+                    className="relative rounded-md p-3 hover:bg-gray-100 flex items-center"
                     onClick={() => setCountry(country.key)}
                   >
                     <Image
@@ -64,7 +63,7 @@ export default function Tabs({ data }: TabsProps) {
                       height={14}
                       priority
                     />
-                    <h3 className="text-sm font-medium leading-5">
+                    <h3 className="text-sm font-medium leading-5 truncate">
                       {country.name}
                     </h3>
                   </Popover.Button>
@@ -76,4 +75,6 @@ export default function Tabs({ data }: TabsProps) {
       </Tab.Group>
     </div>
   );
-}
+});
+
+export default Tabs;

@@ -1,8 +1,10 @@
+import { memo } from 'react';
+
 import { Popover } from '@headlessui/react';
 
 import FlagPicker from './flag-picker';
 
-export default function NavBar() {
+const NavBar = memo(function NavBar() {
   return (
     <header className="bg-white">
       <nav
@@ -24,7 +26,7 @@ export default function NavBar() {
             This is
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Dummy
+            Default
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Navbar
@@ -36,4 +38,6 @@ export default function NavBar() {
       </nav>
     </header>
   );
-}
+});
+
+export default NavBar;

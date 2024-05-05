@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState, useEffect } from 'react';
+import { Fragment, useContext, useState, useEffect, memo } from 'react';
 import Image from 'next/image';
 
 import { Popover, Transition } from '@headlessui/react';
@@ -8,7 +8,7 @@ import { CountryContext } from '@/context';
 
 import Tabs from './tabs';
 
-export default function FlagPicker() {
+const FlagPicker = memo(function FlagPicker() {
   const [countriesData, setCountriesData] = useState({});
   const isDataFetched = !!Object.keys(countriesData);
   const { country } = useContext(CountryContext);
@@ -16,7 +16,10 @@ export default function FlagPicker() {
   const mapData = (data: any[]) => {
     const mappedData: any = {};
     data.forEach((country) => {
-      const { region, id, name, 'alpha-2': key } = country;
+      let { region, id, name, 'alpha-2': key } = country;
+      if (!region) {
+        region = 'Global';
+      }
       if (!mappedData[region]) {
         mappedData[region] = [];
       }
@@ -64,6 +67,7 @@ export default function FlagPicker() {
           aria-hidden="true"
         />
       </Popover.Button>
+      <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
 
       <Transition
         as={Fragment}
@@ -74,7 +78,7 @@ export default function FlagPicker() {
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-1"
       >
-        <Popover.Panel className="absolute right-0 top-full z-20 mt-3 w-screen overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+        <Popover.Panel className="absolute right-0 top-full z-20 mt-3 max-w-4xl w-screen overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
           <div className="p-4">
             <Tabs data={countriesData} />
           </div>
@@ -82,4 +86,6 @@ export default function FlagPicker() {
       </Transition>
     </Popover>
   );
-}
+});
+
+export default FlagPicker;
